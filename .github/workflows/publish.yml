@@ -1,0 +1,49 @@
+name: Publish Mod
+
+# Triggers only when a GitHub Release is published
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21' # Standard Java version for Minecraft 1.20.6+
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # This automatically compiles your code in the cloud
+      - name: Build Mod
+        run: ./gradlew build
+
+      # The magic step: Uploading to the platforms
+      - name: Publish to Modrinth and CurseForge
+        uses: Kir-Antipov/mc-publish@v3
+        with:
+          # REPLACE THESE with your actual project IDs
+          curseforge-id: 123456 
+          modrinth-id: A1b2C3d4 
+
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          # Grabs the compiled mod jar (ignores dev or source jars)
+          files: build/libs/!(*-sources|*-dev).jar 
+
+          # Pulls the release name, version tag, and description straight from GitHub
+          name: ${{ github.event.release.name }}
+          version: ${{ github.event.release.tag_name }}
+          changelog: ${{ github.event.release.body }}
+
+          # Targets
+          loaders: neoforge
+          game-versions: 1.21.1
