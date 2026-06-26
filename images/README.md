@@ -13,16 +13,16 @@ Folder containing the central image banners for Modrinth, CurseForge, and Github
 
 <!-- List out the most important files or subdirectories that developers should know about when navigating this folder. Bold the file name, dash, then a plain-English explanation. -->
 
-- **`Data Packs.png`** — File
-- **`Dependencies.png`** — File
-- **`Features.png`** — File
-- **`Modpacks.png`** — File
-- **`Overview.png`** — File
-- **`Shader Packs.png`** — File
-- **`Structures.png`** — File
-- **`Support.png`** — File
-- **`Systems.png`** — File
-- **`Texture Packs.png`** — File
+- **`Data Packs.png`** - File
+- **`Dependencies.png`** - File
+- **`Features.png`** - File
+- **`Modpacks.png`** - File
+- **`Overview.png`** - File
+- **`Shader Packs.png`** - File
+- **`Structures.png`** - File
+- **`Support.png`** - File
+- **`Systems.png`** - File
+- **`Texture Packs.png`** - File
 
 ---
 
