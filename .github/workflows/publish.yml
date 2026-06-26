@@ -1,0 +1,86 @@
+name: Publish Mod
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Release Assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p build/libs
+          # Download all .jar files attached to this GitHub release
+          gh release download ${{ github.event.release.tag_name }} --dir build/libs
+
+      - name: Parse Tag and Determine Project IDs
+        id: parse_tag
+        run: |
+          # Expected Tag Format: modname-version (e.g. voxy-v1.2.0 or createcities-v1.0)
+          TAG="${{ github.event.release.tag_name }}"
+          
+          # We use IFS to split the tag by hyphens and take the first part as the mod name
+          MOD=$(echo "$TAG" | cut -d'-' -f1)
+          
+          # Fallback defaults
+          CF_ID=""
+          MR_ID=""
+          
+          echo "Determining project IDs for Mod: $MOD"
+          
+          if [ "$MOD" == "voxy" ]; then
+            CF_ID="1580671"
+            MR_ID="VOXY_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "voxyworldgen" ]; then
+            CF_ID="1588540"
+            MR_ID="VOXYWORLDGEN_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "createcities" ]; then
+            CF_ID="1585303"
+            MR_ID="CREATECITIES_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "createcity" ]; then
+            CF_ID="1588533"
+            MR_ID="CREATECITY_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "createcityclassic" ]; then
+            CF_ID="CREATECITYCLASSIC_CURSEFORGE_ID_HERE"
+            MR_ID="CREATECITYCLASSIC_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "lcm" ]; then
+            CF_ID="PLACEHOLDER"
+            MR_ID="LCM_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "tacz" ]; then
+            CF_ID="1413748"
+            MR_ID="TACZ_MODRINTH_ID_HERE"
+          elif [ "$MOD" == "smallcaps" ]; then
+            CF_ID="1083204"
+            MR_ID="SMALLCAPS_MODRINTH_ID_HERE"
+          else
+            echo "Error: Unknown mod prefix in tag '$MOD'"
+            exit 1
+          fi
+          
+          # Pass the variables to the next steps
+          echo "CURSEFORGE_ID=$CF_ID" >> $GITHUB_ENV
+          echo "MODRINTH_ID=$MR_ID" >> $GITHUB_ENV
+
+      - name: Publish to Modrinth and CurseForge
+        uses: Kir-Antipov/mc-publish@v3
+        with:
+          curseforge-id: ${{ env.CURSEFORGE_ID }}
+          modrinth-id: ${{ env.MODRINTH_ID }}
+          
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          
+          # Upload ALL jars we downloaded from the GitHub Release
+          files: build/libs/*.jar
+          
+          name: ${{ github.event.release.name }}
+          version: ${{ github.event.release.tag_name }}
+          changelog: ${{ github.event.release.body }}
+          
+          # mc-publish automatically infers game-versions and loaders from the .jar metadata
