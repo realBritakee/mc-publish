@@ -1,6 +1,6 @@
 # MC Publish Hub
 
-This repository serves as the centralized, public release hub for all mods within the workspace.
+This repository serves as the centralized, public release hub for all mods within the Britakee Studio network.
 
 ## How to Publish a Mod
 
