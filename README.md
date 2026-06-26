@@ -19,7 +19,7 @@ You **MUST** use the exact `modname-version` format for your tags (e.g., `create
 | Voxy NeoForge Port | `voxy` | `voxy-v1.2.0` |
 | Voxy WorldGen V2 | `voxyworldgen` | `voxyworldgen-v1.0` |
 | Lost Cities Multithreaded | `lcm` | `lcm-v1.0.1` |
-| [TACZ] Fallout Gunpack | `tacz` | `tacz-v1.0` |
+| [TACZ] Fallout Gunpack | `fallout-gunpack` | `fallout-gunpack-v1.0` |
 | Small Caps Font v1.0 | `smallcaps` | `smallcaps-v1.0` |
 
 > [!CAUTION]
